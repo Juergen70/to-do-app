@@ -19,11 +19,21 @@ app.get('/', (req, res)=> {
     res.send('request received');
 })
 
+//Wenn ein neues Item hinzugefügt werden soll
+// soll Nodejs server dieses so behandeln
 app.post('/add', (req, res)=>{
-    db.run(INSERT INTO tasks (titel) VALUES(?), [req.body.titel] function () {
-    res.json({tag: "Mittwoch", bald_wirds: "Mittagspause"});
+    db.run(INSERT INTO tasks (titel) VALUES(?), [req.body.titel] function() {
+      res.json({tag: "Mittwoch", bald_wirds: "Mittagspause"});
     });
 });
+
+// Liste mir alle existierenden Items
+// Hier sollten nur alle Items als JSON im Response geschrieben werden 
+app.get('/Liste_abrufen',(reg, res)=>{
+    db.all('SELECT * FROM tasks', function(err,rows ){
+        res.json(rows);
+    })
+})
 
 app.listen(3050,"localhost",()=>{
     console.log("bald ist Mittagspause")
