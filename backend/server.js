@@ -1,16 +1,17 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 
 //TODO: Verbinde eine Datenbank dazu
 
 const db = new sqlite3.Database('./tasks.db');
-
+app.use(cors());                // Middleware
 app.use(bodyParser.json());     // Middleware (wie ein Übersetzer)
 
-
+// erstellung eines Table in der Datenbank
 db.run('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, completed BOOLEAN DEFAULT 0)');
 
 
@@ -28,7 +29,7 @@ app.get('/ralf', (req, res) => {
 // Wenn ein neues Item hinzugefügt werden soll, soll NodeJS Server diesen Request so behandeln:
 app.post('/add', (req, res) => {
     db.run('INSERT INTO tasks (title) VALUES (?)', [req.body.title], function () {
-        res.json({tag: "Mittwoch", bald_wirds: "Mittagspause"});
+        res.json({id: this.lastID, titel: req.body.titel, completed:0});
     });
 });
 
